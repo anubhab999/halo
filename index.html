@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name – Personal Website</title>
+<meta name="description" content="Personal website of Your Name – developer and designer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Design tokens ---------- */
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --ink: #17202b;
+    --ink-soft: #526070;
+    --line: #dbe1e8;
+    --accent: #2447d8;
+    --accent-ink: #ffffff;
+    --ok: #1f9d55;
+
+    --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Hanken Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+    --radius: 10px;
+    --sidebar: 320px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10151c;
+      --surface: #171e27;
+      --ink: #e9eef4;
+      --ink-soft: #9aa8b8;
+      --line: #263140;
+      --accent: #7d97ff;
+      --accent-ink: #0d1320;
+      --ok: #4cc27f;
+    }
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  p { margin: 0 0 1em; max-width: 62ch; }
+  h1, h2, h3 { font-family: var(--font-display); margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .skip {
+    position: absolute; left: -999px; top: 8px;
+    background: var(--accent); color: var(--accent-ink);
+    padding: 8px 14px; border-radius: 6px; z-index: 10;
+  }
+  .skip:focus { left: 8px; }
+
+  /* ---------- Layout ---------- */
+  .layout { display: grid; grid-template-columns: var(--sidebar) minmax(0, 1fr); min-height: 100vh; }
+
+  .sidebar {
+    position: sticky; top: 0; height: 100vh;
+    padding: 56px 40px 40px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border-right: 1px solid var(--line);
+  }
+  .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .role { color: var(--ink-soft); margin: 6px 0 0; font-size: 1rem; }
+
+  nav ul { list-style: none; margin: 48px 0 0; padding: 0; display: grid; gap: 4px; }
+  nav a {
+    display: block; padding: 6px 0 6px 16px;
+    color: var(--ink-soft); font-weight: 500;
+    border-left: 2px solid var(--line);
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: var(--ink); }
+  nav a.active { color: var(--ink); border-left-color: var(--accent); }
+
+  .side-foot { display: grid; gap: 14px; font-size: .95rem; color: var(--ink-soft); }
+  .status { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 500; }
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--ok);
+    box-shadow: 0 0 0 0 var(--ok);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 10px transparent; }
+  }
+  .socials { display: flex; gap: 18px; }
+  .socials a { color: var(--ink-soft); transition: color .2s; }
+  .socials a:hover { color: var(--accent); }
+
+  main { padding: 0 clamp(24px, 6vw, 96px); }
+  section { padding: 96px 0 24px; max-width: 760px; }
+  section:first-child { padding-top: 120px; }
+
+  h2 { font-size: 1.75rem; margin-bottom: 28px; }
+
+  /* ---------- Hero ---------- */
+  .hero h1 { font-size: clamp(2.6rem, 6.4vw, 4.6rem); font-weight: 700; letter-spacing: -0.035em; }
+  .hero h1 span { color: var(--ink-soft); }
+  .hero .lead { font-size: 1.2rem; color: var(--ink-soft); margin-top: 28px; max-width: 52ch; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .btn {
+    display: inline-flex; align-items: center; padding: 12px 22px;
+    border-radius: 999px; font-weight: 600; font-size: 1rem;
+    border: 1px solid var(--ink);
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+
+  /* ---------- About ---------- */
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .facts dt { color: var(--ink-soft); font-size: .9rem; }
+  .facts dd { margin: 2px 0 0; font-weight: 600; }
+
+  /* ---------- Experience ---------- */
+  .timeline { display: grid; gap: 36px; }
+  .job { display: grid; grid-template-columns: 130px 1fr; gap: 24px; }
+  .job time { color: var(--ink-soft); font-size: .95rem; padding-top: 4px; }
+  .job h3 { font-size: 1.2rem; letter-spacing: -0.01em; }
+  .job .where { color: var(--ink-soft); margin: 2px 0 10px; }
+  .job p { margin-bottom: 0; }
+
+  /* ---------- Projects ---------- */
+  .projects { display: grid; gap: 14px; }
+  .project {
+    display: block; padding: 24px 26px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color .2s, transform .2s;
+  }
+  .project:hover { border-color: var(--accent); }
+  .project h3 { font-size: 1.2rem; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .project p { color: var(--ink-soft); margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  .tags li { font-size: .85rem; padding: 3px 12px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); color: var(--ink-soft); }
+
+  /* ---------- Skills ---------- */
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+  .skills h3 { font-size: 1.05rem; letter-spacing: -0.005em; margin-bottom: 10px; }
+  .skills ul { list-style: none; margin: 0; padding: 0; color: var(--ink-soft); display: grid; gap: 4px; }
+
+  /* ---------- Contact ---------- */
+  .mail {
+    display: inline-block; margin: 6px 0 24px;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.4rem, 4vw, 2.2rem); letter-spacing: -0.02em;
+    border-bottom: 2px solid var(--accent);
+    transition: color .2s;
+  }
+  .mail:hover { color: var(--accent); }
+
+  footer { padding: 72px 0 40px; color: var(--ink-soft); font-size: .92rem; }
+
+  /* ---------- One page-load moment ---------- */
+  .hero > * { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .hero > *:nth-child(2) { animation-delay: .1s; }
+  .hero > *:nth-child(3) { animation-delay: .2s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .sidebar {
+      position: sticky; top: 0; height: auto; z-index: 5;
+      flex-direction: row; align-items: center; justify-content: space-between;
+      padding: 14px 24px; border-right: 0; border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(10px);
+    }
+    .role, .side-foot { display: none; }
+    nav ul { margin: 0; display: flex; gap: 18px; }
+    nav a { border: 0; padding: 4px 0; font-size: .95rem; }
+    nav a.active { color: var(--accent); }
+    section:first-child { padding-top: 64px; }
+    section { padding-top: 72px; }
+  }
+  @media (max-width: 560px) {
+    nav li:nth-child(n+4) { display: none; }
+    .job { grid-template-columns: 1fr; gap: 4px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#about">Skip to content</a>
+
+<div class="layout">
+
+  <!-- ========== Sidebar ========== -->
+  <header class="sidebar">
+    <div>
+      <a class="brand" href="#intro">Your Name</a>
+      <p class="role">Web developer &amp; designer</p>
+
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="#intro" class="active">Intro</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="side-foot">
+      <div class="status"><span class="dot" aria-hidden="true"></span> Open to new projects</div>
+      <div class="socials">
+        <a href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://x.com/yourname" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Content ========== -->
+  <main>
+
+    <section class="hero" id="intro" aria-label="Introduction">
+      <h1>Hi, I'm Your Name. <span>I build clear, useful things for the web.</span></h1>
+      <p class="lead">I'm a developer and designer based in Kolkata, India. I turn ideas into fast, accessible websites and products that people enjoy using.</p>
+      <div class="actions">
+        <a class="btn primary" href="#contact">Get in touch</a>
+        <a class="btn ghost" href="#projects">See my work</a>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>About me</h2>
+      <p>I've spent the last few years designing and building websites for startups, students and small businesses. I care about simple layouts, readable text and code that's easy to maintain.</p>
+      <p>Away from the screen, I like reading, photography and long walks. I'm always learning something new, and right now that's motion design and 3D on the web.</p>
+      <dl class="facts">
+        <div><dt>Location</dt><dd>Kolkata, India</dd></div>
+        <div><dt>Experience</dt><dd>4+ years</dd></div>
+        <div><dt>Languages</dt><dd>English, Bengali, Hindi</dd></div>
+      </dl>
+    </section>
+
+    <section id="experience">
+      <h2>Experience</h2>
+      <div class="timeline">
+        <article class="job">
+          <time>2024 – Present</time>
+          <div>
+            <h3>Frontend Developer</h3>
+            <div class="where">Company Name</div>
+            <p>Lead the interface for a customer dashboard used by thousands of people daily. Improved page load time by 40% and rebuilt the design system.</p>
+          </div>
+        </article>
+        <article class="job">
+          <time>2022 – 2024</time>
+          <div>
+            <h3>Freelance Web Designer</h3>
+            <div class="where">Self-employed</div>
+            <p>Designed and launched websites for 20+ local businesses and creators, from first sketch to final deployment.</p>
+          </div>
+        </article>
+        <article class="job">
+          <time>2020 – 2022</time>
+          <div>
+            <h3>Bachelor's in Computer Science</h3>
+            <div class="where">Your University</div>
+            <p>Focused on web technologies and human-computer interaction. Graduated with distinction.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>Selected projects</h2>
+      <div class="projects">
+        <a class="project" href="#" target="_blank" rel="noopener">
+          <h3>Project One</h3>
+          <p>A task manager that helps small teams plan their week. Simple, quick and works offline.</p>
+          <ul class="tags"><li>React</li><li>Node.js</li><li>PostgreSQL</li></ul>
+        </a>
+        <a class="project" href="#" target="_blank" rel="noopener">
+          <h3>Project Two</h3>
+          <p>A portfolio and booking site for a local photographer, with a fast image gallery.</p>
+          <ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+        </a>
+        <a class="project" href="#" target="_blank" rel="noopener">
+          <h3>Project Three</h3>
+          <p>An open-source tool that turns spreadsheets into clean, shareable charts.</p>
+          <ul class="tags"><li>TypeScript</li><li>D3</li><li>Open source</li></ul>
+        </a>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+      <div class="skills">
+        <div>
+          <h3>Development</h3>
+          <ul><li>HTML &amp; CSS</li><li>JavaScript / TypeScript</li><li>React</li><li>Node.js</li></ul>
+        </div>
+        <div>
+          <h3>Design</h3>
+          <ul><li>UI &amp; UX design</li><li>Figma</li><li>Design systems</li><li>Accessibility</li></ul>
+        </div>
+        <div>
+          <h3>Tools</h3>
+          <ul><li>Git &amp; GitHub</li><li>VS Code</li><li>Vercel &amp; Netlify</li><li>Notion</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Let's talk</h2>
+      <p>Have a project in mind, or just want to say hello? Send me an email and I'll reply within two days.</p>
+      <a class="mail" href="mailto:hello@yourname.com">hello@yourname.com</a>
+      <div class="actions">
+        <a class="btn ghost" href="https://linkedin.com/in/yourname" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://github.com/yourname" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
+
+    <footer>© <span id="year">2026</span> Your Name. All rights reserved.</footer>
+  </main>
+</div>
+
+<script>
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Highlight the current section in the navigation
+  const links = [...document.querySelectorAll('nav a')];
+  const targets = links.map(a => document.querySelector(a.getAttribute('href')));
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { rootMargin: '-35% 0px -55% 0px' });
+
+  targets.forEach(t => {
+    if (!t) return;
+    observer.observe(t);
+  });
+</script>
+</body>
+</html>
